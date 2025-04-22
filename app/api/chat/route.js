@@ -6,7 +6,7 @@ import path from "path";
 import fs from "fs/promises";
 
 // Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 const filePath = path.join(process.cwd(), "lib/knowledge/system-message-grok.md");
 const systemMessage = await fs.readFile(filePath, "utf8");
