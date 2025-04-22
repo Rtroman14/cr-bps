@@ -109,7 +109,7 @@ export const ChatMessage = memo(({ logo = "", content, id, role, attachments }) 
                     />
                 </div>
             </div>
-            <div className="flex-grow">
+            <div className="flex-grow w-full">
                 <div className={cn("antialiased text-primary text-sm mt-1")}>
                     {content &&
                         blocks.map((block, index) => (

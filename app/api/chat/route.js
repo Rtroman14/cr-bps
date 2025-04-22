@@ -13,26 +13,44 @@ const systemMessage = await fs.readFile(filePath, "utf8");
 
 const sendWebhook = async (data) => {
     try {
-        const response = await fetch("https://webhook.site/57682b78-1365-4093-a8df-88da0b5a8fb0", {
+        const webhookUrl = process.env.WEBHOOK_URL;
+        const response = await fetch(webhookUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
         });
-        return response.ok;
+
+        if (!response.ok) {
+            throw new Error(`Webhook failed with status: ${response.status}`);
+        }
+
+        const contentType = response.headers.get("content-type") || "";
+
+        let responseBody;
+        if (contentType.includes("application/json")) {
+            responseBody = await response.json();
+        } else {
+            responseBody = await response.text();
+        }
+
+        return {
+            success: true,
+            data: responseBody,
+        };
     } catch (error) {
         console.error("Webhook error:", error);
-        return false;
+        return {
+            success: false,
+            error: error.message,
+            status: error.status || 500,
+        };
     }
 };
 
 export async function POST(req) {
     const { messages } = await req.json();
-
-    console.log(`messages -->`, messages);
-
-    console.log(messages[0].parts);
 
     const openai = createOpenAI({
         compatibility: "strict",
@@ -79,8 +97,11 @@ export async function POST(req) {
                 }),
                 execute: async (proposalData) => {
                     try {
-                        const success = await sendWebhook(proposalData);
-                        return { success: true };
+                        const webhook = await sendWebhook(proposalData);
+
+                        console.log(`webhook -->`, webhook);
+
+                        return webhook;
                     } catch (error) {
                         console.error(error);
                         return {

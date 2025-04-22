@@ -131,7 +131,13 @@ export default function ChatPage() {
                     <form
                         ref={formRef}
                         onSubmit={(event) => {
-                            handleSubmit(event, { experimental_attachments: files });
+                            let options = { experimental_attachments: files };
+                            if (!input.trim() && files && files.length > 0) {
+                                options.content = "See attached";
+                            }
+                            console.log(`event -->`, event);
+                            console.log(`options -->`, options);
+                            handleSubmit(event, options);
                             setFiles(undefined);
                             if (fileInputRef.current) {
                                 fileInputRef.current.value = "";
