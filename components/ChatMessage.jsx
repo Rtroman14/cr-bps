@@ -30,7 +30,7 @@ export const ChatMessage = memo(({ logo = "", content, id, role, attachments }) 
     if (role === "user") {
         return (
             <div className="flex w-full justify-end">
-                <div className="flex items-start gap-3 max-w-[85%]">
+                <div className="flex items-start gap-3 max-w-[80%]">
                     <div className="bg-muted text-primary rounded-xl px-4 py-2.5 shadow text-sm">
                         {content &&
                             blocks.map((block, index) => (
@@ -92,7 +92,7 @@ export const ChatMessage = memo(({ logo = "", content, id, role, attachments }) 
     }
 
     return (
-        <div className="flex w-full gap-4 max-w-[85%]">
+        <div className="flex w-full gap-4 max-w-[80%]">
             <div className="flex-shrink-0">
                 <div className="relative mx-auto h-8 w-8 sm:h-9 sm:w-9">
                     <Image

@@ -43,7 +43,7 @@ export default function ChatPage() {
     return (
         <div className="flex flex-col h-screen">
             <ScrollArea className="flex-1 min-h-0 overflow-hidden w-full">
-                <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 max-w-4xl mx-auto">
+                <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 max-w-3xl mx-auto">
                     <div className="mx-auto w-full py-6 space-y-9">
                         {messages.map((message) => {
                             return (

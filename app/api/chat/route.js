@@ -8,7 +8,7 @@ import fs from "fs/promises";
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
-const filePath = path.join(process.cwd(), "lib/knowledge/system-message.md");
+const filePath = path.join(process.cwd(), "lib/knowledge/system-message-grok.md");
 const systemMessage = await fs.readFile(filePath, "utf8");
 
 const sendWebhook = async (data) => {
