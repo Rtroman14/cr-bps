@@ -10,7 +10,7 @@ import LoadingMessage from "./loading-message";
 
 const initialMessages = [
     {
-        id: "123",
+        id: "initial",
         role: "assistant",
         content: "Hello! How can I assist you with creating a proposal today?",
     },
