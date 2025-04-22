@@ -110,7 +110,7 @@ export const ChatMessage = memo(({ logo = "", content, id, role, attachments }) 
                 </div>
             </div>
             <div className="flex-grow">
-                <div className={cn("antialiased text-primary text-sm")}>
+                <div className={cn("antialiased text-primary text-sm mt-1")}>
                     {content &&
                         blocks.map((block, index) => (
                             <MemoizedMarkdownBlock content={block} key={`${id}-block_${index}`} />

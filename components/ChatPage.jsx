@@ -8,8 +8,18 @@ import { PaperClipIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useChat } from "@ai-sdk/react";
 import LoadingMessage from "./loading-message";
 
+const initialMessages = [
+    {
+        id: "123",
+        role: "assistant",
+        content: "Hello! How can I assist you with creating a proposal today?",
+    },
+];
+
 export default function ChatPage() {
-    const { messages, input, handleInputChange, handleSubmit, status, setMessages } = useChat();
+    const { messages, input, handleInputChange, handleSubmit, status, setMessages } = useChat({
+        initialMessages,
+    });
     const messagesEndRef = useRef(null);
     const formRef = useRef(null);
     const [files, setFiles] = useState([]);
@@ -21,8 +31,6 @@ export default function ChatPage() {
             formRef.current?.requestSubmit();
         }
     };
-
-    console.log(`files -->`, files);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,10 +48,19 @@ export default function ChatPage() {
         }
     };
 
+    // Handler to reset the conversation to initial state
+    const handleNewChat = () => {
+        setMessages(initialMessages);
+        setFiles([]);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
     return (
         <div className="flex flex-col h-screen">
             <ScrollArea className="flex-1 min-h-0 overflow-hidden w-full">
-                <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 max-w-3xl mx-auto">
+                <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 max-w-4xl mx-auto">
                     <div className="mx-auto w-full py-6 space-y-9">
                         {messages.map((message) => {
                             return (
@@ -153,8 +170,15 @@ export default function ChatPage() {
                             aria-label="Enter your prompt"
                         />
                         {/* Textarea buttons */}
-                        <div className="flex items-center justify-end gap-2 p-3">
-                            {/* Right buttons */}
+                        <div className="flex items-center justify-between gap-2 p-3">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="rounded-full h-8 text-xs"
+                                onClick={handleNewChat}
+                            >
+                                New Chat
+                            </Button>
                             <div className="flex items-center gap-2">
                                 <Button
                                     type="button"
@@ -165,8 +189,8 @@ export default function ChatPage() {
                                 >
                                     <PaperClipIcon className="text-muted-foreground/70 size-5" />
                                 </Button>
-                                <Button type="submit" className="rounded-full h-8">
-                                    Ask Max
+                                <Button type="submit" className="rounded-full h-8 text-xs">
+                                    Send
                                 </Button>
                             </div>
                         </div>

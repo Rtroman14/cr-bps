@@ -80,7 +80,7 @@ export async function POST(req) {
                 execute: async (proposalData) => {
                     try {
                         const success = await sendWebhook(proposalData);
-                        return { success, data: webhookData };
+                        return { success: true };
                     } catch (error) {
                         console.error(error);
                         return {
