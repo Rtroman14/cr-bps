@@ -1,4 +1,4 @@
-import { streamText, smoothStream, tool } from "ai";
+import { streamText, smoothStream, tool, generateText } from "ai";
 // import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
@@ -147,6 +147,29 @@ export async function POST(req) {
                     return `<proposal_introduction_examples>${content}</proposal_introduction_examples>`;
                 },
             }),
+            // generate_scope_of_services: tool({
+            //     description: "Use this tool to generate the scope of services section",
+            //     parameters: z.object({}),
+            //     execute: async () => {
+            //         // Read the CR-BPS summary markdown file
+            //         const filePath = path.join(
+            //             process.cwd(),
+            //             "lib/knowledge/scope-of-services-examples.md"
+            //         );
+            //         const content = await fs.readFile(filePath, "utf8");
+
+            //         const { text } = await generateText({
+            //             model: openai("o4-mini"),
+            //             prompt: `Your task is to generate a scope of services section for CR-BPS. They will include your generated output in their proposal. Here are previous examples of this section they've used in the past:
+
+            //             <scope_of_services_examples>${content}</scope_of_services_examples>
+            //             `,
+            //             messages,
+            //         });
+
+            //         return text;
+            //     },
+            // }),
             generate_scope_of_services: tool({
                 description: "Use this tool to generate the scope of services section",
                 parameters: z.object({}),
@@ -165,6 +188,9 @@ export async function POST(req) {
             console.log("ERROR");
             console.error(error); // your error logging logic here
         },
+        // onStepFinish(event) {
+        //     console.log(`event -->`, event);
+        // },
         onFinish({ text, finishReason, usage, response }) {},
     });
 
