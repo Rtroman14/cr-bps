@@ -1,5 +1,5 @@
 import { streamText, smoothStream, tool, generateText } from "ai";
-// import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
 import path from "path";
@@ -57,9 +57,17 @@ export async function POST(req) {
         apiKey: process.env.OPENAI_API_KEY,
     });
 
+    // const google = createGoogleGenerativeAI({
+    //     apiKey: process.env.GOOGLE_AI_API_KEY,
+    // });
+
     const result = streamText({
         system: systemMessage,
-        model: openai("gpt-4o"),
+        // model: google("gemini-2.0-flash-001"), // not great results
+        // model: openai("gpt-4o"), // spent $9 on 1 day of testing
+        // model: openai("gpt-4o-mini"), // won't work - has a 128K tokens context window.
+        model: openai("o4-mini"), // this works
+        // model: openai("gpt-4.1-nano"), // no
         experimental_transform: smoothStream({
             delayInMs: 20, // optional: defaults to 10ms
         }),
@@ -71,7 +79,7 @@ export async function POST(req) {
                 parameters: z.object({
                     client_first_name: z.string().describe("The first name of the client"),
                     client_last_name: z.string().describe("The last name of the client"),
-                    client_email: z.string().email().describe("The email address of the client"),
+                    client_email: z.string().describe("The email address of the client"),
                     client_street_address: z.string().describe("The client's street address"),
                     client_city: z.string().describe("The city in which the client resides"),
                     client_state: z
@@ -191,7 +199,9 @@ export async function POST(req) {
         // onStepFinish(event) {
         //     console.log(`event -->`, event);
         // },
-        onFinish({ text, finishReason, usage, response }) {},
+        onFinish({ text, finishReason, usage, response }) {
+            console.log(`usage -->`, usage);
+        },
     });
 
     return result.toDataStreamResponse();
