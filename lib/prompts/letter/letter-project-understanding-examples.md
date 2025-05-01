@@ -4,7 +4,7 @@ These excerpts show how past CR‑BPS proposals frame the **“Project Understa
 
 ---
 
-### Example 1 – FSAM & Asset Management Plans
+## Example 1 – FSAM & Asset Management Plans
 
 CR‑BPS SPECIALIZES IN FSAM AND ASSET MANAGEMENT PLANS\*\*
 
@@ -18,7 +18,7 @@ While our team is experienced in the design phase, our passion is in developing 
 
 ---
 
-### Example 2 – High‑Performance Home (Finlayson, MN)
+## Example 2 – High‑Performance Home (Finlayson, MN)
 
 The Client intends on creating a new high‑performance home as their private residence on undeveloped land in Finlayson, MN. The address of the new property is 15584 180th Avenue, Finlayson, Minnesota. The home is intended to house the two of them.
 
@@ -26,19 +26,19 @@ The Client’s goals, or Owner Project Requirements (OPR), include designing and
 
 ---
 
-### Example 3 – HVAC System Design (Duluth Fire Hall #1)
+## Example 3 – HVAC System Design (Duluth Fire Hall #1)
 
 Our objective is to design a state‑of‑the‑art HVAC system that meets your specific needs and exceeds industry standards in energy efficiency and performance for the remodel project located at City of Duluth Fire Hall #1. Implementing a high‑performance HVAC system in your project will provide numerous benefits, including energy savings, enhanced comfort, indoor air quality, environmental sustainability, and system longevity and reliability.
 
 ---
 
-### Example 4 – Community Center Insulation & Mechanical Modernization
+## Example 4 – Community Center Insulation & Mechanical Modernization
 
 We understand that Morgan Park Community Center is moving forward with additional roof insulation and mechanical system replacement. The City has requested professional services from CR‑Building Performance Specialists, GBC (CR‑BPS) as described in this letter proposal. The design work is to take place in the Winter of 2024–25 with construction during the summer and fall of 2025.
 
 ---
 
-### Example 5 – Townhouse Water‑Leak Diagnostics (Minneapolis, MN)
+## Example 5 – Townhouse Water‑Leak Diagnostics (Minneapolis, MN)
 
 You, the owners of the townhouse at 16 Melbourne Ave SE, Minneapolis, MN 55414, have reported persistent wintertime water leakage from the living room’s vaulted ceiling. This issue remains despite recent re‑roofing and ceiling insulation work. CR‑BPS understands the leakage may be caused by air exfiltration into the ceiling cavity.
 
@@ -46,7 +46,7 @@ Warm, moist air can enter these cavities and condense when it contacts colder su
 
 ---
 
-### Example 6 – High‑Performance Cabin (La Pointe, WI)
+## Example 6 – High‑Performance Cabin (La Pointe, WI)
 
 The Client intends on creating a new high‑performance cabin as their private residence on undeveloped land in La Pointe, WI. The address of the new property is 2343 Hagen Road, La Pointe, WI 54850. The home is intended to house the Client and his son. The extent of use is still undetermined but could be vacant for long periods of time.
 

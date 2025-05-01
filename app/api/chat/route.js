@@ -1,14 +1,12 @@
 import { streamText, smoothStream, tool, generateText } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
 import path from "path";
 import fs from "fs/promises";
 
-// Allow streaming responses up to 30 seconds
-export const maxDuration = 60;
+export const maxDuration = 120;
 
-const filePath = path.join(process.cwd(), "lib/knowledge/system-message-grok.v2.2.md");
+const filePath = path.join(process.cwd(), "lib/prompts/system-message/system-message-grok.v2.3.md");
 const systemMessage = await fs.readFile(filePath, "utf8");
 
 const sendWebhook = async (data) => {
@@ -75,7 +73,7 @@ export async function POST(req) {
         maxSteps: 8,
         tools: {
             create_proposal: tool({
-                description: "Submit a new proposal to PandaDoc via webhook",
+                description: "Submits a proposal to PandaDoc with the provided variables",
                 parameters: z.object({
                     client_first_name: z.string().describe("The first name of the client"),
                     client_last_name: z.string().describe("The last name of the client"),
@@ -96,9 +94,10 @@ export async function POST(req) {
                         .describe(
                             "A detailed introduction to the proposal including scope and purpose"
                         ),
-                    proposal_name: z
+                    proposal_name: z.string().describe("The name of the proposal document file"),
+                    proposal_title: z
                         .string()
-                        .describe("The title or name of the proposal document"),
+                        .describe("The title of the proposal document (cover letter title)"),
                     proposal_type: z
                         .enum(["letter", "rfp_response"])
                         .describe("The type of proposal being submitted"),
@@ -129,7 +128,20 @@ export async function POST(req) {
                     return `<about_cr_bps>${content}</about_cr_bps>`;
                 },
             }),
-            project_understanding_examples: tool({
+            letter_proposal_introduction_examples: tool({
+                description:
+                    "Provides examples of introduction sections from past CR-BPS letter proposals",
+                parameters: z.object({}),
+                execute: async () => {
+                    const filePath = path.join(
+                        process.cwd(),
+                        "lib/prompts/letter/letter-proposal-introduction-examples.md"
+                    );
+                    const content = await fs.readFile(filePath, "utf8");
+                    return `<letter_proposal_introduction_examples>${content}</letter_proposal_introduction_examples>`;
+                },
+            }),
+            letter_project_understanding_examples: tool({
                 description:
                     "Get examples of project understanding sections from past CR-BPS proposals",
                 parameters: z.object({}),
@@ -137,49 +149,13 @@ export async function POST(req) {
                     // Read the CR-BPS summary markdown file
                     const filePath = path.join(
                         process.cwd(),
-                        "lib/knowledge/project-understanding-examples.md"
+                        "lib/prompts/letter/letter-project-understanding-examples.md"
                     );
                     const content = await fs.readFile(filePath, "utf8");
-                    return `<project_understanding_examples>${content}</project_understanding_examples>`;
+                    return `<letter_project_understanding_examples>${content}</letter_project_understanding_examples>`;
                 },
             }),
-            proposal_introduction_examples: tool({
-                description: "Get examples of introduction sections from past CR-BPS proposals",
-                parameters: z.object({}),
-                execute: async () => {
-                    // Read the CR-BPS summary markdown file
-                    const filePath = path.join(
-                        process.cwd(),
-                        "lib/knowledge/proposal-introduction-examples.md"
-                    );
-                    const content = await fs.readFile(filePath, "utf8");
-                    return `<proposal_introduction_examples>${content}</proposal_introduction_examples>`;
-                },
-            }),
-            // scope_of_services_examples: tool({
-            //     description: "Use this tool to generate the scope of services section",
-            //     parameters: z.object({}),
-            //     execute: async () => {
-            //         // Read the CR-BPS summary markdown file
-            //         const filePath = path.join(
-            //             process.cwd(),
-            //             "lib/knowledge/scope-of-services-examples.md"
-            //         );
-            //         const content = await fs.readFile(filePath, "utf8");
-
-            //         const { text } = await generateText({
-            //             model: openai("o4-mini"),
-            //             prompt: `Your task is to generate a scope of services section for CR-BPS. They will include your generated output in their proposal. Here are previous examples of this section they've used in the past:
-
-            //             <scope_of_services_examples>${content}</scope_of_services_examples>
-            //             `,
-            //             messages,
-            //         });
-
-            //         return text;
-            //     },
-            // }),
-            scope_of_services_examples: tool({
+            letter_scope_of_services_examples: tool({
                 description:
                     "Get examples of scope of services sections from past CR-BPS proposals",
                 parameters: z.object({}),
@@ -187,10 +163,51 @@ export async function POST(req) {
                     // Read the CR-BPS summary markdown file
                     const filePath = path.join(
                         process.cwd(),
-                        "lib/knowledge/scope-of-services-examples.md"
+                        "lib/prompts/letter/letter-scope-of-services-examples.md"
                     );
                     const content = await fs.readFile(filePath, "utf8");
-                    return `<scope_of_services_examples>${content}</scope_of_services_examples>`;
+                    return `<letter_scope_of_services_examples>${content}</letter_scope_of_services_examples>`;
+                },
+            }),
+            rfp_response_introduction_examples: tool({
+                description:
+                    "Provides examples of introduction sections from past CR-BPS letter proposals",
+                parameters: z.object({}),
+                execute: async () => {
+                    const filePath = path.join(
+                        process.cwd(),
+                        "lib/prompts/rfp-response/rfp-response-introduction-examples.md"
+                    );
+                    const content = await fs.readFile(filePath, "utf8");
+                    return `<rfp_response_introduction_examples>${content}</rfp_response_introduction_examples>`;
+                },
+            }),
+            rfp_response_project_understanding_examples: tool({
+                description:
+                    "Get examples of project understanding sections from past CR-BPS proposals",
+                parameters: z.object({}),
+                execute: async () => {
+                    // Read the CR-BPS summary markdown file
+                    const filePath = path.join(
+                        process.cwd(),
+                        "lib/prompts/rfp-response/rfp-response-project-understanding-examples.md"
+                    );
+                    const content = await fs.readFile(filePath, "utf8");
+                    return `<rfp_response_project_understanding_examples>${content}</rfp_response_project_understanding_examples>`;
+                },
+            }),
+            rfp_response_scope_of_services_examples: tool({
+                description:
+                    "Get examples of scope of services sections from past CR-BPS proposals",
+                parameters: z.object({}),
+                execute: async () => {
+                    // Read the CR-BPS summary markdown file
+                    const filePath = path.join(
+                        process.cwd(),
+                        "lib/prompts/rfp-response/rfp-response-scope-of-services-examples.md"
+                    );
+                    const content = await fs.readFile(filePath, "utf8");
+                    return `<rfp_response_scope_of_services_examples>${content}</rfp_response_scope_of_services_examples>`;
                 },
             }),
         },

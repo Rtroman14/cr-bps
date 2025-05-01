@@ -7,6 +7,7 @@ import { ChatMessage } from "@/components/ChatMessage";
 import { PaperClipIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useChat } from "@ai-sdk/react";
 import LoadingMessage from "./loading-message";
+import { toast } from "sonner";
 
 const initialMessages = [
     {
@@ -19,6 +20,10 @@ const initialMessages = [
 export default function ChatPage() {
     const { messages, input, handleInputChange, handleSubmit, status, setMessages } = useChat({
         initialMessages,
+        onError(error) {
+            console.error(`error -->`, error);
+            toast.error(error.message || "There was an error");
+        },
     });
     const messagesEndRef = useRef(null);
     const formRef = useRef(null);
