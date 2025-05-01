@@ -8,7 +8,7 @@ import fs from "fs/promises";
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 60;
 
-const filePath = path.join(process.cwd(), "lib/knowledge/system-message-grok.md");
+const filePath = path.join(process.cwd(), "lib/knowledge/system-message-grok.v2.2.md");
 const systemMessage = await fs.readFile(filePath, "utf8");
 
 const sendWebhook = async (data) => {
@@ -75,7 +75,7 @@ export async function POST(req) {
         maxSteps: 8,
         tools: {
             create_proposal: tool({
-                description: "Send a proposal submission webhook event",
+                description: "Submit a new proposal to PandaDoc via webhook",
                 parameters: z.object({
                     client_first_name: z.string().describe("The first name of the client"),
                     client_last_name: z.string().describe("The last name of the client"),
@@ -120,7 +120,7 @@ export async function POST(req) {
                 },
             }),
             about_cr_bps: tool({
-                description: "Get information about CR-BPS",
+                description: "Get general information about CR-BPS company and services",
                 parameters: z.object({}),
                 execute: async () => {
                     // Read the CR-BPS summary markdown file
@@ -129,8 +129,9 @@ export async function POST(req) {
                     return `<about_cr_bps>${content}</about_cr_bps>`;
                 },
             }),
-            generate_project_understanding: tool({
-                description: "Use this tool to generate the project understanding section",
+            project_understanding_examples: tool({
+                description:
+                    "Get examples of project understanding sections from past CR-BPS proposals",
                 parameters: z.object({}),
                 execute: async () => {
                     // Read the CR-BPS summary markdown file
@@ -142,8 +143,8 @@ export async function POST(req) {
                     return `<project_understanding_examples>${content}</project_understanding_examples>`;
                 },
             }),
-            generate_proposal_introduction: tool({
-                description: "Use this tool to generate the proposal introduction section",
+            proposal_introduction_examples: tool({
+                description: "Get examples of introduction sections from past CR-BPS proposals",
                 parameters: z.object({}),
                 execute: async () => {
                     // Read the CR-BPS summary markdown file
@@ -155,7 +156,7 @@ export async function POST(req) {
                     return `<proposal_introduction_examples>${content}</proposal_introduction_examples>`;
                 },
             }),
-            // generate_scope_of_services: tool({
+            // scope_of_services_examples: tool({
             //     description: "Use this tool to generate the scope of services section",
             //     parameters: z.object({}),
             //     execute: async () => {
@@ -178,8 +179,9 @@ export async function POST(req) {
             //         return text;
             //     },
             // }),
-            generate_scope_of_services: tool({
-                description: "Use this tool to generate the scope of services section",
+            scope_of_services_examples: tool({
+                description:
+                    "Get examples of scope of services sections from past CR-BPS proposals",
                 parameters: z.object({}),
                 execute: async () => {
                     // Read the CR-BPS summary markdown file

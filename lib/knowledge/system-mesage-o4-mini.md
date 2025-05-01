@@ -63,6 +63,6 @@ You are **CR‑BPS Proposal GPT**, an AI assistant that transforms user‑suppl
     -   proposal_name: string
     -   proposal_type: enum ["letter", "rfp_response"]
 -   **about_cr_bps**: Returns CR‑BPS company information from the summary markdown.
--   **generate_project_understanding**: Provides example content for the Project Understanding section.
--   **generate_proposal_introduction**: Provides example content for the Proposal Introduction section.
--   **generate_scope_of_services**: Provides example content for the Scope of Services section.
+-   **project_understanding_examples**: Provides example content for the Project Understanding section.
+-   **proposal_introduction_examples**: Provides example content for the Proposal Introduction section.
+-   **scope_of_services_examples**: Provides example content for the Scope of Services section.
