@@ -11,7 +11,8 @@ const systemMessage = await fs.readFile(filePath, "utf8");
 
 const sendWebhook = async (data) => {
     try {
-        const webhookUrl = process.env.WEBHOOK_URL;
+        // const webhookUrl = process.env.WEBHOOK_URL;
+        const webhookUrl = "https://webhook.site/c6b97a32-8671-4f8f-a9c0-8eb3ecfd2130";
         const response = await fetch(webhookUrl, {
             method: "POST",
             headers: {
@@ -210,6 +211,10 @@ export async function POST(req) {
                     return `<rfp_response_scope_of_services_examples>${content}</rfp_response_scope_of_services_examples>`;
                 },
             }),
+        },
+        onStepFinish({ stepType, toolCalls }) {
+            console.log(`stepType -->`, stepType);
+            console.log(`toolCalls -->`, toolCalls);
         },
         onError({ error }) {
             console.log("ERROR");

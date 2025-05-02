@@ -13,18 +13,19 @@ const initialMessages = [
     {
         id: "initial",
         role: "assistant",
-        content: "Hello! How can I assist you with creating a proposal today?",
+        content: `Hello! Which proposal type would you like help with? "Letter" or "RFP Response"?`,
     },
 ];
 
 export default function ChatPage() {
-    const { messages, input, handleInputChange, handleSubmit, status, setMessages } = useChat({
-        initialMessages,
-        onError(error) {
-            console.error(`error -->`, error);
-            toast.error(error.message || "There was an error");
-        },
-    });
+    const { messages, input, handleInputChange, handleSubmit, status, setMessages, append } =
+        useChat({
+            initialMessages,
+            onError(error) {
+                console.error(`error -->`, error);
+                toast.error(error.message || "There was an error");
+            },
+        });
     const messagesEndRef = useRef(null);
     const formRef = useRef(null);
     const [files, setFiles] = useState([]);
@@ -36,6 +37,10 @@ export default function ChatPage() {
             formRef.current?.requestSubmit();
         }
     };
+
+    useEffect(() => {
+        console.log(`status -->`, status);
+    }, [status]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -78,12 +83,11 @@ export default function ChatPage() {
                                 />
                             );
                         })}
+                        {(status === "submitted" || status === "streaming") && (
+                            <div>{status === "submitted" && <LoadingMessage />}</div>
+                        )}
                         <div ref={messagesEndRef} aria-hidden="true" />
                     </div>
-
-                    {(status === "submitted" || status === "streaming") && (
-                        <div>{status === "submitted" && <LoadingMessage />}</div>
-                    )}
                 </div>
             </ScrollArea>
 
@@ -136,13 +140,13 @@ export default function ChatPage() {
                     <form
                         ref={formRef}
                         onSubmit={(event) => {
+                            event.preventDefault();
                             let options = { experimental_attachments: files };
                             if (!input.trim() && files && files.length > 0) {
-                                options.content = "See attached";
+                                append({ role: "user", content: "See attached" }, options);
+                            } else {
+                                handleSubmit(event, options);
                             }
-                            console.log(`event -->`, event);
-                            console.log(`options -->`, options);
-                            handleSubmit(event, options);
                             setFiles(undefined);
                             if (fileInputRef.current) {
                                 fileInputRef.current.value = "";
