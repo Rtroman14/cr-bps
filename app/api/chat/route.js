@@ -4,15 +4,15 @@ import { z } from "zod";
 import path from "path";
 import fs from "fs/promises";
 
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 const filePath = path.join(process.cwd(), "lib/prompts/system-message/system-message-grok.v2.3.md");
 const systemMessage = await fs.readFile(filePath, "utf8");
 
 const sendWebhook = async (data) => {
     try {
-        // const webhookUrl = process.env.WEBHOOK_URL;
-        const webhookUrl = "https://webhook.site/c6b97a32-8671-4f8f-a9c0-8eb3ecfd2130";
+        const webhookUrl = process.env.WEBHOOK_URL;
+        // const webhookUrl = "https://webhook.site/c6b97a32-8671-4f8f-a9c0-8eb3ecfd2130";
         const response = await fetch(webhookUrl, {
             method: "POST",
             headers: {
