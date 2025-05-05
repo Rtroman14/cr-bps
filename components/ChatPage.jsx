@@ -8,6 +8,7 @@ import { PaperClipIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useChat } from "@ai-sdk/react";
 import LoadingMessage from "./loading-message";
 import { toast } from "sonner";
+import Thinking from "@/components/thinking";
 
 const initialMessages = [
     {
@@ -67,25 +68,38 @@ export default function ChatPage() {
         }
     };
 
+    useEffect(() => {
+        console.log(messages);
+    }, [messages]);
+
     return (
         <div className="flex flex-col h-screen">
             <ScrollArea className="flex-1 min-h-0 overflow-hidden w-full">
                 <div className="h-full flex flex-col px-4 md:px-6 lg:px-8 max-w-4xl mx-auto">
                     <div className="mx-auto w-full py-6 space-y-9">
-                        {messages.map((message) => {
-                            return (
-                                <ChatMessage
-                                    key={message.id}
-                                    role={message.role}
-                                    id={message.id}
-                                    content={message.content}
-                                    attachments={message.experimental_attachments}
-                                />
-                            );
-                        })}
-                        {(status === "submitted" || status === "streaming") && (
-                            <div>{status === "submitted" && <LoadingMessage />}</div>
+                        {messages
+                            .filter((message) => message.content !== "")
+                            .map((message) => {
+                                return (
+                                    <ChatMessage
+                                        key={message.id}
+                                        role={message.role}
+                                        id={message.id}
+                                        content={message.content}
+                                        attachments={message.experimental_attachments}
+                                    />
+                                );
+                            })}
+                        {status === "submitted" && (
+                            <div>{status === "submitted" && <Thinking />}</div>
                         )}
+                        {messages.at(-1)?.role === "assistant" &&
+                            messages.at(-1)?.content === "" &&
+                            status !== "submitted" && (
+                                <div>
+                                    <Thinking />
+                                </div>
+                            )}
                         <div ref={messagesEndRef} aria-hidden="true" />
                     </div>
                 </div>

@@ -79,6 +79,10 @@ export async function POST(req) {
                     client_first_name: z.string().describe("The first name of the client"),
                     client_last_name: z.string().describe("The last name of the client"),
                     client_email: z.string().describe("The email address of the client"),
+                    client_company: z.string().describe("The company name the client works for"),
+                    client_title: z
+                        .string()
+                        .describe("The title of the client (empty string if unknown)"),
                     client_street_address: z.string().describe("The client's street address"),
                     client_city: z.string().describe("The city in which the client resides"),
                     client_state: z
