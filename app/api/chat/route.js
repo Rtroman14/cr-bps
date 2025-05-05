@@ -4,7 +4,7 @@ import { z } from "zod";
 import path from "path";
 import fs from "fs/promises";
 
-export const maxDuration = 60;
+export const maxDuration = 180;
 
 const filePath = path.join(process.cwd(), "lib/prompts/system-message/system-message-grok.v2.3.md");
 const systemMessage = await fs.readFile(filePath, "utf8");
