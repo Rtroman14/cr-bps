@@ -4,11 +4,12 @@ import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage } from "@/components/ChatMessage";
-import { PaperClipIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PaperClipIcon, XMarkIcon, MicrophoneIcon } from "@heroicons/react/24/outline";
 import { useChat } from "@ai-sdk/react";
 import LoadingMessage from "./loading-message";
 import { toast } from "sonner";
 import Thinking from "@/components/thinking";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
 const initialMessages = [
     {
@@ -31,6 +32,44 @@ export default function ChatPage() {
     const formRef = useRef(null);
     const [files, setFiles] = useState([]);
     const fileInputRef = useRef(null);
+
+    // Speech recognition setup
+    const commands = [];
+    const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
+        useSpeechRecognition({ commands });
+
+    // Store the current dictation to avoid duplication
+    const [currentDictation, setCurrentDictation] = useState("");
+
+    // Handle dictation changes
+    useEffect(() => {
+        if (listening && transcript) {
+            setCurrentDictation(transcript);
+        }
+    }, [transcript, listening]);
+
+    const startDictation = () => {
+        resetTranscript();
+        setCurrentDictation("");
+        SpeechRecognition.startListening({ continuous: true });
+    };
+
+    const stopDictation = () => {
+        SpeechRecognition.stopListening();
+        if (currentDictation) {
+            // Append the final dictation to the input
+            handleInputChange({ target: { value: input + " " + currentDictation } });
+            setCurrentDictation("");
+        }
+    };
+
+    const toggleListening = () => {
+        if (listening) {
+            stopDictation();
+        } else {
+            startDictation();
+        }
+    };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
@@ -155,6 +194,10 @@ export default function ChatPage() {
                         ref={formRef}
                         onSubmit={(event) => {
                             event.preventDefault();
+                            // Stop dictation if active when submitting
+                            if (listening) {
+                                stopDictation();
+                            }
                             let options = { experimental_attachments: files };
                             if (!input.trim() && files && files.length > 0) {
                                 append({ role: "user", content: "See attached" }, options);
@@ -191,7 +234,9 @@ export default function ChatPage() {
                             }}
                         />
                         <textarea
-                            value={input}
+                            value={
+                                listening ? `${input}${input ? " " : ""}${currentDictation}` : input
+                            }
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown}
                             className="flex sm:min-h-[70px] w-full bg-transparent px-4 py-3 text-[15px] leading-relaxed text-foreground placeholder:text-muted-foreground/70 focus-visible:outline-none [resize:none]"
@@ -209,6 +254,26 @@ export default function ChatPage() {
                                 New Chat
                             </Button>
                             <div className="flex items-center gap-2">
+                                {browserSupportsSpeechRecognition && (
+                                    <Button
+                                        type="button"
+                                        className={`rounded-full size-8 border-border hover:bg-background hover:shadow-md transition-[box-shadow] ${
+                                            listening ? "bg-red-100" : ""
+                                        }`}
+                                        onClick={toggleListening}
+                                        variant="outline"
+                                        size="icon"
+                                        title={listening ? "Stop dictation" : "Start dictation"}
+                                    >
+                                        <MicrophoneIcon
+                                            className={`size-5 ${
+                                                listening
+                                                    ? "text-red-500"
+                                                    : "text-muted-foreground/70"
+                                            }`}
+                                        />
+                                    </Button>
+                                )}
                                 <Button
                                     type="button"
                                     className="rounded-full size-8 border-border hover:bg-background hover:shadow-md transition-[box-shadow]"
