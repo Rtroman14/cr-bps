@@ -22,6 +22,7 @@ const initialMessages = [
 export default function ChatPage() {
     const { messages, input, handleInputChange, handleSubmit, status, setMessages, append } =
         useChat({
+            // api: "/api/chat/test",
             initialMessages,
             onError(error) {
                 console.error(`error -->`, error);
